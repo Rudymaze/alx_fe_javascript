@@ -90,7 +90,7 @@ function createAddQuoteForm() {
 }
 
 // Function to populate the category filter dropdown
-function populateCategory() {
+function populateCategories() {
   const categoryFilter = document.getElementById("categoryFilter");
   if (categoryFilter) {
     // Get all unique categories from the quotes array
