@@ -89,6 +89,30 @@ function createAddQuoteForm() {
   }
 }
 
+// Function to export quotes as a JSON file
+function exportQuotes() {
+  const dataStr = JSON.stringify(quotes, null, 2);
+  const dataBlob = new Blob([dataStr], { type: "application/json" });
+  const url = URL.createObjectURL(dataBlob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "quotes.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Function to import quotes from a JSON file
+function importFromJsonFile(event) {
+  const fileReader = new FileReader();
+  fileReader.onload = function (event) {
+    const importedQuotes = JSON.parse(event.target.result);
+    quotes.push(...importedQuotes);
+    saveQuotes();
+    alert("Quotes imported successfully!");
+  };
+  fileReader.readAsText(event.target.files[0]);
+}
+
 // Function to initialize the application
 function init() {
   // Create a container for the random quote display
@@ -102,4 +126,28 @@ function init() {
   randomQuoteBtn.addEventListener("click", showRandomQuote);
   document.body.appendChild(randomQuoteBtn);
   // Create a container for the "Add Quote" form
+
+  // Create a container for the quotes list
+  const quotesList = document.createElement("ul");
+  quotesList.id = "quotesList";
+  document.body.appendChild(quotesList);
+
+  // Create a container for the "Add Quote" form
+  const formContainer = document.createElement("div");
+  formContainer.id = "formContainer";
+  document.body.appendChild(formContainer);
+
+  // Create a button to show the "Add Quote" form
+  const addQuoteBtn = document.createElement("button");
+  addQuoteBtn.textContent = "Add New Quote";
+  addQuoteBtn.addEventListener("click", createAddQuoteForm);
+  document.body.appendChild(addQuoteBtn);
+
+  // Create a button to export quotes
+  const exportBtn = document.createElement("button");
+  exportBtn.textContent = "Export Quotes";
+  exportBtn.addEventListener("click", exportQuotes);
+  document.body.appendChild(exportBtn);
 }
+// Initialize the application when the page loads
+document.addEventListener("DOMContentLoaded", init);
