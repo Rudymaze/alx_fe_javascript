@@ -27,6 +27,28 @@ async function fetchQuotesFromServer() {
   }
 }
 
+// Function to resolve conflicts between local and server data
+function resolveConflicts(syncQuotes) {
+  // Create a map of server quotes for quick lookup
+  const syncQuoteMap = new Map(syncQuotes.map((quote) => [quote.text, quote]));
+
+  // Update local quotes with server data
+  const updatedQuotes = quotes.map((localQuote) => {
+    const syncQuote = syncQuoteMap.get(localQuote.text);
+    return syncQuote ? syncQuote : localQuote; // Prefer server data
+  });
+
+  // Add new quotes from the server that don't exist locally
+  syncQuotes.forEach((syncQuote) => {
+    if (!quotes.some((localQuote) => localQuote.text === serverQuote.text)) {
+      updatedQuotes.push(syncQuote);
+    }
+  });
+
+  // Update the quotes array
+  quotes = updatedQuotes;
+}
+
 // Function to periodically fetch quotes
 function startPeriodicFetching(interval = 5000) {
   fetchQuotesFromServer(); // Fetch immediately
