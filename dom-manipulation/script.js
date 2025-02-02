@@ -4,6 +4,21 @@ newQuoteButton = document.getElementById("newQuote");
 // Array to store quote objects
 let quotes = [];
 
+// Function to show a notification
+function showNotification(message, type = "info") {
+  const notificationBar = document.getElementById("notificationBar");
+  if (notificationBar) {
+    notificationBar.textContent = message;
+    notificationBar.className = `notification ${type}`;
+    notificationBar.style.display = "block";
+
+    // Hide the notification after 5 seconds
+    setTimeout(() => {
+      notificationBar.style.display = "none";
+    }, 5000);
+  }
+}
+
 // Function to fetch quotes from JSONPlaceholder
 async function fetchQuotesFromServer() {
   try {
@@ -22,6 +37,21 @@ async function fetchQuotesFromServer() {
     // Display the fetched quotes
     displayQuotes();
     populateCategoryFilter();
+
+    // Notify the user if conflicts were resolved
+    if (conflicts.length > 0) {
+      showNotification(
+        `${conflicts.length} conflicts resolved. Click here to review.`,
+        "warning"
+      );
+      document
+        .getElementById("notificationBar")
+        .addEventListener("click", () => {
+          showConflictResolutionDialog(conflicts);
+        });
+    } else {
+      showNotification("Quotes synced with server!");
+    }
   } catch (error) {
     console.error("Error fetching quotes:", error);
   }
