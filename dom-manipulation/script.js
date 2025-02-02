@@ -17,6 +17,20 @@ let quotes = [
   },
 ];
 
+// Load quotes from localStorage on page load
+function loadQuotes() {
+  const storedQuotes = localStorage.getItem("quotes");
+  if (storedQuotes) {
+    quotes = JSON.parse(storedQuotes);
+  }
+  displayQuotes(); // Display the loaded quotes
+}
+
+// Save quotes to localStorage
+function saveQuotes() {
+  localStorage.setItem("quotes", JSON.stringify(quotes));
+}
+
 // Function to display a random quote
 function showRandomQuote() {
   const randomIndex = Math.floor(Math.random() * quotes.length);
@@ -30,6 +44,9 @@ function showRandomQuote() {
         `;
   }
 }
+
+// Store the last displayed quote in sessionStorage
+sessionStorage.setItem("lastRandomQuote", JSON.stringify(randomQuote));
 
 // Function to create and display the "Add Quote" form
 function createAddQuoteForm() {
