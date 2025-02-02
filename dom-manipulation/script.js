@@ -2,20 +2,57 @@ document.getElementById("quoteDisplay");
 newQuoteButton = document.getElementById("newQuote");
 
 // Array to store quote objects
-let quotes = [
-  {
-    text: "The only limit to our realization of tomorrow is our doubts of today.",
-    category: "Inspiration",
-  },
-  {
-    text: "In the middle of every difficulty lies opportunity.",
-    category: "Motivation",
-  },
-  {
-    text: "The best way to predict the future is to invent it.",
-    category: "Innovation",
-  },
-];
+let quotes = [];
+
+// Function to fetch quotes from JSONPlaceholder
+async function fetchQuotesFromServer() {
+  try {
+    const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+    const data = await response.json();
+
+    // Map the fetched data to our quote format
+    quotes = data.map((post) => ({
+      text: post.title,
+      category: `User ${post.userId}`, // Use userId as the category
+    }));
+
+    // Save the fetched quotes to localStorage
+    saveQuotes();
+
+    // Display the fetched quotes
+    displayQuotes();
+    populateCategoryFilter();
+  } catch (error) {
+    console.error("Error fetching quotes:", error);
+  }
+}
+
+// Function to periodically fetch quotes
+function startPeriodicFetching(interval = 5000) {
+  fetchQuotesFromServer(); // Fetch immediately
+  setInterval(fetchQuotes, interval); // Fetch periodically
+}
+
+// Function to post a new quote to JSONPlaceholder
+async function postQuote(newQuote) {
+  try {
+    const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: newQuote.text,
+        body: newQuote.category,
+        userId: 1, // Simulate a user ID
+      }),
+    });
+    const data = await response.json();
+    console.log("Quote posted:", data);
+  } catch (error) {
+    console.error("Error posting quote:", error);
+  }
+}
 
 // Load quotes from localStorage on page load
 function loadQuotes() {
