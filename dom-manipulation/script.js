@@ -89,6 +89,35 @@ function createAddQuoteForm() {
   }
 }
 
+// Function to populate the category filter dropdown
+function populateCategory() {
+  const categoryFilter = document.getElementById("categoryFilter");
+  if (categoryFilter) {
+    // Get all unique categories from the quotes array
+    const categories = [...new Set(quotes.map((quote) => quote.category))];
+
+    // Clear the dropdown and add the default "All" option
+    categoryFilter.innerHTML = '<option value="">All Categories</option>';
+
+    // Add each category as an option
+    categories.forEach((category) => {
+      const option = document.createElement("option");
+      option.value = category;
+      option.textContent = category;
+      categoryFilter.appendChild(option);
+    });
+  }
+}
+
+// Function to filter quotes by category
+function filterQuotes() {
+  const categoryFilter = document.getElementById("categoryFilter");
+  if (categoryFilter) {
+    const selectedCategory = categoryFilter.value;
+    displayQuotes(selectedCategory); // Display quotes filtered by the selected category
+  }
+}
+
 // Function to export quotes as a JSON file
 function exportQuotes() {
   const dataStr = JSON.stringify(quotes, null, 2);

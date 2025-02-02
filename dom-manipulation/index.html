@@ -28,6 +28,11 @@
       onchange="importFromJsonFile(event)" />
     <button id="importBtn">Import Quotes</button>
 
+    <select id="categoryFilter" onchange="filterQuotes()">
+      <option value="all">All Categories</option>
+      <!-- Dynamically populated categories -->
+    </select>
+
     <script src="./script.js"></script>
   </body>
 </html>
